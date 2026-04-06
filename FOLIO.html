@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FOLIO — Personal Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream: #f8f4ee;
+      --warm: #f0e8dc;
+      --dark: #1c1814;
+      --mid-dark: #2e2820;
+      --terracotta: #c4613a;
+      --sage: #6b7c5e;
+      --gold: #b89a5a;
+      --light-line: rgba(28,24,20,0.1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--dark);
+      font-family: 'Jost', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Subtle texture */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23f0e8dc'/%3E%3Ccircle cx='0' cy='0' r='0.6' fill='%23e8ddd2' opacity='0.5'/%3E%3Ccircle cx='2' cy='2' r='0.6' fill='%23e8ddd2' opacity='0.5'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.6;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      padding: 28px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 200;
+      mix-blend-mode: multiply;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      color: var(--dark);
+      text-transform: uppercase;
+    }
+    .nav-links { display: flex; gap: 44px; list-style: none; }
+    .nav-links a {
+      font-size: 0.72rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(28,24,20,0.65);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--terracotta); }
+    .nav-hire {
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dark);
+      background: transparent;
+      border: 1px solid rgba(28,24,20,0.35);
+      padding: 10px 24px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .nav-hire:hover {
+      background: var(--dark);
+      color: var(--cream);
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+    }
+
+    .hero-left {
+      padding: 140px 60px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-tagline {
+      font-size: 0.7rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(28,24,20,0.5);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .hero-tagline::before {
+      content: '';
+      display: block;
+      width: 32px; height: 1px;
+      background: var(--terracotta);
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 7vw, 7.5rem);
+      font-weight: 300;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin-top: auto;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--terracotta);
+      display: block;
+    }
+    .hero-title .sub-name {
+      display: block;
+      font-size: 0.8em;
+      font-weight: 300;
+      color: rgba(28,24,20,0.45);
+    }
+
+    .hero-bottom-text {
+      display: flex;
+      align-items: flex-end;
+      gap: 48px;
+    }
+    .hero-desc {
+      max-width: 280px;
+      font-size: 0.88rem;
+      line-height: 1.8;
+      font-weight: 300;
+      color: rgba(28,24,20,0.6);
+    }
+    .hero-cta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .cta-link {
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--dark);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 10px;
+      transition: gap 0.3s;
+    }
+    .cta-link::after {
+      content: '→';
+      font-size: 0.85rem;
+    }
+    .cta-link:hover { gap: 18px; color: var(--terracotta); }
+
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-image-area {
+      width: 100%; height: 100%;
+      background: linear-gradient(160deg, #d4c5b2 0%, #b8a898 30%, #8b7d6b 70%, #6b5e4e 100%);
+      position: relative;
+    }
+    .hero-image-area::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 60% 40%, rgba(196,97,58,0.25), transparent 65%);
+    }
+    .hero-image-overlay {
+      position: absolute; bottom: 48px; left: 40px;
+      background: rgba(248,244,238,0.9);
+      backdrop-filter: blur(12px);
+      padding: 24px 32px;
+      border-left: 3px solid var(--terracotta);
+      max-width: 260px;
+    }
+    .overlay-role {
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(28,24,20,0.5);
+      margin-bottom: 6px;
+    }
+    .overlay-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .overlay-loc {
+      font-size: 0.72rem;
+      color: rgba(28,24,20,0.5);
+      margin-top: 4px;
+      font-weight: 300;
+    }
+
+    /* ABSTRACT ELEMENTS */
+    .hero-circle {
+      position: absolute;
+      width: 500px; height: 500px;
+      border: 1px solid rgba(28,24,20,0.08);
+      border-radius: 50%;
+      top: 50%; right: 25%;
+      transform: translate(50%, -50%);
+      pointer-events: none;
+      animation: rotateSlow 30s linear infinite;
+    }
+    @keyframes rotateSlow {
+      from { transform: translate(50%, -50%) rotate(0deg); }
+      to { transform: translate(50%, -50%) rotate(360deg); }
+    }
+
+    /* ABOUT STRIP */
+    .about-strip {
+      background: var(--dark);
+      color: var(--cream);
+      padding: 80px 60px;
+      display: grid;
+      grid-template-columns: 1fr 2px 1fr 2px 1fr;
+      gap: 0;
+    }
+    .strip-divider { background: rgba(248,244,238,0.1); }
+    .strip-item { padding: 0 60px; text-align: center; }
+    .strip-item:first-child { padding-left: 0; text-align: left; }
+    .strip-item:last-child { padding-right: 0; text-align: right; }
+    .strip-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.5rem;
+      font-weight: 300;
+      line-height: 1;
+      color: var(--terracotta);
+    }
+    .strip-label {
+      font-size: 0.7rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(248,244,238,0.5);
+      margin-top: 8px;
+    }
+
+    /* WORK SECTION */
+    .portfolio {
+      padding: 120px 60px;
+    }
+    .portfolio-header {
+      display: flex; align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 72px;
+    }
+    .portfolio-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.1;
+    }
+    .portfolio-title em { font-style: italic; color: var(--terracotta); }
+    .view-all {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(28,24,20,0.5);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+      transition: color 0.25s, gap 0.3s;
+    }
+    .view-all:hover { color: var(--terracotta); gap: 16px; }
+    .view-all::after { content: '→'; }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 24px;
+    }
+    .portfolio-left { display: flex; flex-direction: column; gap: 24px; }
+    .portfolio-right { display: flex; flex-direction: column; gap: 24px; }
+
+    .p-card {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .p-card-image {
+      width: 100%;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .p-card:hover .p-card-image { transform: scale(1.04); }
+    .pc1 { height: 420px; background: linear-gradient(135deg, #d4bfa8 0%, #c4a882 40%, #a88060 100%); }
+    .pc2 { height: 260px; background: linear-gradient(135deg, #c8d4c0 0%, #a8b898 40%, #88987a 100%); }
+    .pc3 { height: 320px; background: linear-gradient(135deg, #d4c8bc 0%, #b8a8a0 40%, #907870 100%); }
+    .pc4 { height: 360px; background: linear-gradient(135deg, #c4c8d4 0%, #a0a8bc 40%, #808898 100%); }
+
+    .p-card-info {
+      padding: 20px 0 4px;
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .p-card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+    .p-card-cat {
+      font-size: 0.68rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(28,24,20,0.45);
+    }
+    .p-card-tag {
+      display: inline-block;
+      position: absolute;
+      top: 20px; left: 20px;
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(248,244,238,0.9);
+      color: var(--dark);
+      padding: 5px 12px;
+      backdrop-filter: blur(6px);
+    }
+
+    /* SKILLS */
+    .skills {
+      background: var(--warm);
+      padding: 120px 60px;
+    }
+    .skills-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: start;
+    }
+    .skills-left-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 32px;
+    }
+    .skills-left-title em { font-style: italic; color: var(--terracotta); }
+    .skills-body {
+      font-size: 0.88rem;
+      line-height: 1.85;
+      font-weight: 300;
+      color: rgba(28,24,20,0.65);
+      max-width: 380px;
+    }
+    .skills-right { padding-top: 8px; }
+    .skill-row {
+      display: flex; align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--light-line);
+      gap: 20px;
+    }
+    .skill-name {
+      font-size: 0.8rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      min-width: 120px;
+      color: rgba(28,24,20,0.7);
+    }
+    .skill-bar-bg {
+      flex: 1;
+      height: 1px;
+      background: rgba(28,24,20,0.12);
+      position: relative;
+      overflow: visible;
+    }
+    .skill-bar-fill {
+      height: 1px;
+      background: var(--terracotta);
+      width: 0%;
+      transition: width 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      position: relative;
+    }
+    .skill-bar-fill::after {
+      content: '';
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      position: absolute;
+      right: 0; top: -3px;
+    }
+    .skill-pct {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: rgba(28,24,20,0.45);
+      min-width: 40px;
+      text-align: right;
+    }
+
+    /* PROCESS */
+    .process {
+      padding: 120px 60px;
+    }
+    .process-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4vw, 3.8rem);
+      font-weight: 300;
+      margin-bottom: 72px;
+      line-height: 1.1;
+    }
+    .process-title em { font-style: italic; color: var(--terracotta); }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+    }
+    .step {
+      background: var(--warm);
+      padding: 48px 40px;
+      transition: background 0.3s;
+      cursor: default;
+    }
+    .step:hover { background: var(--dark); color: var(--cream); }
+    .step-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      color: rgba(28,24,20,0.2);
+      line-height: 1;
+      margin-bottom: 28px;
+      transition: color 0.3s;
+    }
+    .step:hover .step-num { color: var(--terracotta); }
+    .step-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 14px;
+    }
+    .step-desc {
+      font-size: 0.82rem;
+      line-height: 1.75;
+      font-weight: 300;
+      color: rgba(28,24,20,0.55);
+      transition: color 0.3s;
+    }
+    .step:hover .step-desc { color: rgba(248,244,238,0.6); }
+
+    /* CTA SECTION */
+    .cta-section {
+      background: var(--dark);
+      color: var(--cream);
+      padding: 140px 60px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(196,97,58,0.2), transparent 65%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .cta-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(248,244,238,0.4);
+      margin-bottom: 32px;
+      display: flex; align-items: center; justify-content: center; gap: 16px;
+    }
+    .cta-eyebrow::before, .cta-eyebrow::after {
+      content: '';
+      display: block; width: 40px; height: 1px;
+      background: rgba(248,244,238,0.2);
+    }
+    .cta-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 6vw, 6.5rem);
+      font-weight: 300;
+      line-height: 0.95;
+      margin-bottom: 48px;
+    }
+    .cta-title em { font-style: italic; color: var(--terracotta); }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--dark);
+      background: var(--cream);
+      padding: 18px 44px;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .cta-btn:hover {
+      background: var(--terracotta);
+      color: var(--cream);
+      gap: 20px;
+    }
+    .cta-btn::after { content: '→'; font-size: 1rem; }
+
+    /* FOOTER */
+    footer {
+      background: var(--mid-dark);
+      color: var(--cream);
+      padding: 48px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-logo-big {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+    .footer-copy {
+      font-size: 0.68rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: rgba(248,244,238,0.3);
+    }
+    .footer-socials { display: flex; gap: 28px; }
+    .footer-socials a {
+      font-size: 0.68rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(248,244,238,0.4);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    .footer-socials a:hover { color: var(--terracotta); }
+
+    /* Animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-in.in { opacity: 1; transform: none; }
+    .fade-in-delay { transition-delay: 0.15s; }
+    .fade-in-delay2 { transition-delay: 0.3s; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Folio</div>
+    <ul class="nav-links">
+      <li><a href="#portfolio">Work</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#process">Process</a></li>
+    </ul>
+    <button class="nav-hire">Hire Me</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-tagline">Available for Projects</div>
+      <h1 class="hero-title">
+        <em>Design that</em>
+        Speaks
+        <span class="sub-name">Quietly Loud</span>
+      </h1>
+      <div class="hero-bottom-text">
+        <p class="hero-desc">
+          Crafting thoughtful digital experiences that bridge the gap between aesthetic beauty and functional clarity.
+        </p>
+        <div class="hero-cta">
+          <a href="#portfolio" class="cta-link">View Work</a>
+          <a href="#" class="cta-link" style="color: rgba(28,24,20,0.45)">Download CV</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-image-area">
+        <div class="hero-circle"></div>
+        <!-- Decorative floating shapes -->
+        <svg style="position:absolute;top:15%;right:12%;width:80px;opacity:0.3;" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="36" fill="none" stroke="#1c1814" stroke-width="0.8"/>
+          <circle cx="40" cy="40" r="24" fill="none" stroke="#1c1814" stroke-width="0.8"/>
+          <line x1="40" y1="4" x2="40" y2="76" stroke="#1c1814" stroke-width="0.5"/>
+          <line x1="4" y1="40" x2="76" y2="40" stroke="#1c1814" stroke-width="0.5"/>
+        </svg>
+        <svg style="position:absolute;bottom:22%;right:20%;width:50px;opacity:0.25;" viewBox="0 0 50 50">
+          <polygon points="25,5 47,43 3,43" fill="none" stroke="#1c1814" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div class="hero-image-overlay">
+        <div class="overlay-role">Creative Designer</div>
+        <div class="overlay-name">Studio Folio</div>
+        <div class="overlay-loc">Based in Kolkata, India</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT STRIP -->
+  <div class="about-strip">
+    <div class="strip-item">
+      <div class="strip-num">5+</div>
+      <div class="strip-label">Years of Experience</div>
+    </div>
+    <div class="strip-divider"></div>
+    <div class="strip-item">
+      <div class="strip-num">80+</div>
+      <div class="strip-label">Projects Completed</div>
+    </div>
+    <div class="strip-divider"></div>
+    <div class="strip-item">
+      <div class="strip-num">40+</div>
+      <div class="strip-label">Happy Clients</div>
+    </div>
+  </div>
+
+  <!-- PORTFOLIO -->
+  <section class="portfolio" id="portfolio">
+    <div class="portfolio-header fade-in">
+      <h2 class="portfolio-title">
+        Selected<br>
+        <em>Projects</em>
+      </h2>
+      <a href="#" class="view-all">View All Work</a>
+    </div>
+    <div class="portfolio-grid">
+      <div class="portfolio-left">
+        <div class="p-card fade-in">
+          <div class="p-card-image pc1"></div>
+          <div class="p-card-tag">Branding</div>
+          <div class="p-card-info">
+            <span class="p-card-name">Amber House</span>
+            <span class="p-card-cat">Identity / Print</span>
+          </div>
+        </div>
+        <div class="p-card fade-in">
+          <div class="p-card-image pc2"></div>
+          <div class="p-card-tag">Web Design</div>
+          <div class="p-card-info">
+            <span class="p-card-name">Sage Magazine</span>
+            <span class="p-card-cat">Editorial / Digital</span>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-right">
+        <div class="p-card fade-in">
+          <div class="p-card-image pc3"></div>
+          <div class="p-card-tag">Product</div>
+          <div class="p-card-info">
+            <span class="p-card-name">Dust & Thread</span>
+            <span class="p-card-cat">E-Commerce / UI</span>
+          </div>
+        </div>
+        <div class="p-card fade-in">
+          <div class="p-card-image pc4"></div>
+          <div class="p-card-tag">Motion</div>
+          <div class="p-card-info">
+            <span class="p-card-name">Celeste Studio</span>
+            <span class="p-card-cat">Animation / Brand</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="skills" id="skills">
+    <div class="skills-layout">
+      <div>
+        <h2 class="skills-left-title fade-in">Skills &amp;<br><em>Expertise</em></h2>
+        <p class="skills-body fade-in">
+          A blend of visual sensibility and technical depth. I approach every project as both a designer and a problem-solver, bringing intentionality to every pixel.
+        </p>
+      </div>
+      <div class="skills-right">
+        <div class="skill-row fade-in">
+          <span class="skill-name">UI Design</span>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="92"></div></div>
+          <span class="skill-pct">92</span>
+        </div>
+        <div class="skill-row fade-in">
+          <span class="skill-name">Branding</span>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="88"></div></div>
+          <span class="skill-pct">88</span>
+        </div>
+        <div class="skill-row fade-in">
+          <span class="skill-name">Front-End</span>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="78"></div></div>
+          <span class="skill-pct">78</span>
+        </div>
+        <div class="skill-row fade-in">
+          <span class="skill-name">Motion</span>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="72"></div></div>
+          <span class="skill-pct">72</span>
+        </div>
+        <div class="skill-row fade-in">
+          <span class="skill-name">Typography</span>
+          <div class="skill-bar-bg"><div class="skill-bar-fill" data-pct="95"></div></div>
+          <span class="skill-pct">95</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="process" id="process">
+    <h2 class="process-title fade-in">
+      How I<br><em>Work</em>
+    </h2>
+    <div class="process-steps">
+      <div class="step fade-in">
+        <div class="step-num">01</div>
+        <div class="step-name">Discover</div>
+        <p class="step-desc">Deep research into your brand, audience and goals to define the opportunity space clearly.</p>
+      </div>
+      <div class="step fade-in fade-in-delay">
+        <div class="step-num">02</div>
+        <div class="step-name">Define</div>
+        <p class="step-desc">Strategy and concept development — turning insights into a clear, actionable design direction.</p>
+      </div>
+      <div class="step fade-in fade-in-delay">
+        <div class="step-num">03</div>
+        <div class="step-name">Design</div>
+        <p class="step-desc">Bringing concepts to life through typography, color, space and motion with meticulous craft.</p>
+      </div>
+      <div class="step fade-in fade-in-delay2">
+        <div class="step-num">04</div>
+        <div class="step-name">Deliver</div>
+        <p class="step-desc">Polished final assets, handoff documentation and ongoing support to ensure lasting quality.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-eyebrow">Open to Collaboration</div>
+    <h2 class="cta-title">
+      Let's Create<br>
+      <em>Something Beautiful</em>
+    </h2>
+    <a href="mailto:hello@folio.design" class="cta-btn">Start a Conversation</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo-big">Folio</div>
+    <div class="footer-copy">© 2024 Studio Folio. All rights reserved.</div>
+    <div class="footer-socials">
+      <a href="#">Behance</a>
+      <a href="#">Dribbble</a>
+      <a href="#">LinkedIn</a>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const faders = document.querySelectorAll('.fade-in');
+    const revealObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('in');
+      });
+    }, { threshold: 0.12 });
+    faders.forEach(el => revealObs.observe(el));
+
+    // Skill bars
+    const barObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          document.querySelectorAll('.skill-bar-fill').forEach(bar => {
+            const pct = bar.dataset.pct;
+            setTimeout(() => { bar.style.width = pct + '%'; }, 200);
+          });
+          barObs.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    barObs.observe(document.querySelector('.skills-right'));
+  </script>
+</body>
+</html>
